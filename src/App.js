@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import "./App.css";
+import { UserContext } from "./hooks/UserContext";
+import Home from "./pages/Home";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import PrivateRoute from "./pages/PrivateRoute";
+import useFindUser from "./hooks/useFindUser";
 
 function App() {
+  const { user, setUser, isLoading } = useFindUser();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <UserContext.Provider value={{ user, setUser, isLoading }}>
+        <Switch>
+          <Route exact path="/" component={Landing} />
+          <Route path="/login" component={Login} />
+          <PrivateRoute path="/home" component={Home} />
+          <Route component={NotFound} />
+        </Switch>
+      </UserContext.Provider>
+    </Router>
   );
 }
 
